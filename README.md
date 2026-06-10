@@ -57,8 +57,7 @@ Use like any other local Rust crate :
 
 	// set up card...
 
-	unsafe{spcm::spcm_dwSetParam_i32(h_card, spcm::SPC_M2CMD as i32, spcm::M2CMD_CARD_START as i32 | spcm::M2CMD_CARD_ENABLETRIGGER as i32 | spcm::M2CMD_CARD_WAITREADY as i32);
-	}
+	unsafe{spcm::spcm_dwSetParam_i32(h_card, spcm::SPC_M2CMD as i32, spcm::M2CMD_CARD_START as i32 | spcm::M2CMD_CARD_ENABLETRIGGER as i32 | spcm::M2CMD_CARD_WAITREADY as i32);}
 
 	// do something...
 
