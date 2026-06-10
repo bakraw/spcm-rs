@@ -21,7 +21,7 @@ I don't think I'd be legally allowed to redistribute the actual SDK in this repo
 - clang/libclang
 - Spectrum's C SDK (grab it from [Spectrum's website](https://spectrum-instrumentation.com/support/downloads.php), then copy-paste the files in ``src/C_SDK``)
 
-### Installation
+## Installation
 
 ```bash
 cargo build --release
@@ -49,7 +49,7 @@ cross-compiling from Linux to Windows, so I needed to do a few things :
 	cargo build --target=x86_64-pc-windows-gnu --release
 	```
 
-### Usage
+## Usage
 
 Use like any other local Rust crate :
 1. Add to your project's ``Cargo.toml`` :
