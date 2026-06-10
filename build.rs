@@ -10,6 +10,7 @@ fn main() {
 	let target: String = std::env::var("TARGET").unwrap();
 
 	let bindings: bindgen::Bindings = bindgen::Builder::default()
+		.default_macro_constant_type(bindgen::MacroTypeVariation::Signed)	// use i32 default instead of u32
 		.header("wrapper.h")
 		.clang_arg(format!("--target={}", target))
 		.parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))

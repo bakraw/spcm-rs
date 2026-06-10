@@ -67,11 +67,11 @@ Use like any other local Rust crate :
 
 	// set up card...
 
-	unsafe{spcm::spcm_dwSetParam_i32(card_handle, spcm::SPC_M2CMD as i32, spcm::M2CMD_CARD_START as i32 | spcm::M2CMD_CARD_ENABLETRIGGER as i32 | spcm::M2CMD_CARD_WAITREADY as i32);}
+	unsafe{spcm::spcm_dwSetParam_i32(card_handle, spcm::SPC_M2CMD, spcm::M2CMD_CARD_START | spcm::M2CMD_CARD_ENABLETRIGGER | spcm::M2CMD_CARD_WAITREADY);}
 
 	// do something...
 
 	unsafe{spcm::spcm_vClose(card_handle);}
    }
    ```
-   > As you can see, bindgen struggles to correctly infer the proper type for C macros (most of them become ``u32`` by default and need to be cast for use). [TODO: config build.rs to avoid that if possible.]  
+   > I set up bindgen to use i32 as the default type for conerted macros, as that's the type most frequently expected by SPCM's functions. Casting is still needed occasionally.
