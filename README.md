@@ -4,7 +4,7 @@
 
 Bindgen'd Rust bindings for the Spectrum M5i digitizer cards' C SDK (haven't tested but probably also older models I guess).
 
-Also includes (in ``lib.rs``) a few util functions that were useful to me when programming the cards (page aligned alloc, converting that buffer to a ``void*``, reading ``char*`` errors to an ``&str``, etc.). Tried to keep them as idiomatic / clean / simple as possible.
+Also includes (in ``lib.rs``) a few util functions that were useful to me when programming the cards (page aligned alloc, converting that buffer to a ``void*``, reading ``char*`` errors to a ``Option<String>``, etc.). Tried to keep them as idiomatic / clean / simple as possible.
 
 Those utils try to limit ``unsafe`` blocks to individual calls to the SDK's functions and strictly necessary pointer manipulation. Also they use standard Rust naming convention, and not the SDK's (no shot you'll ever catch me using systems hungarian notation).
 
@@ -74,4 +74,4 @@ Use like any other local Rust crate :
 	unsafe{spcm::spcm_vClose(card_handle);}
    }
    ```
-   > I set up bindgen to use i32 as the default type for conerted macros, as that's the type most frequently expected by SPCM's functions. Casting is still needed occasionally.
+   > I set up bindgen to use i32 as the default type for converted macros, as that's the type most frequently expected by SPCM's functions. Casting is still needed occasionally.
