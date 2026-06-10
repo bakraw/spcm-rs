@@ -1,6 +1,6 @@
 # SPCM-rs (WIP)
 
-> **NOT AFFILIATED WITH SPECTRUM INSTRUMENTATION GMBH**. THIS IS NOT OFFICIALLY SUPPORTED SOFTWARE FOR SPECTRUM'S PRODUCTS. USE AT YOUR OWN RISK AND LIABILITY (MIT LICENSE).
+> **NOT AFFILIATED WITH SPECTRUM INSTRUMENTATION GMBH**. THIS IS NOT OFFICIALLY SUPPORTED SOFTWARE FOR SPECTRUM'S PRODUCTS. MIT LICENSE.
 
 Bindgen'd Rust bindings for the Spectrum M5i digitizer cards' C SDK (probably also older models I guess).
 
@@ -8,9 +8,16 @@ Also includes (in ``lib.rs``) a few util functions that were useful to me when p
 
 Those utils use no ``unsafe`` blocks apart from individual calls to the SDK's functions and strictly necessary things (in which case only objects directly returned by the SDK are mannipulated), e.g. ``&str`` from ``*mut i8``. Also they use standard Rust naming convention, as opposed to the SDK's functions (no shot you'll ever catch me using systems hungarian notation).
 
-### Installation
+## Requirements
 
-I don't think I'd be legally allowed to redistribute the actual SDK in this repo and I don't want Spectrum's legal dept to send a hit squad on me, so the files required to build the bindings aren't included. You can grab them from [Spectrum's website](https://spectrum-instrumentation.com/support/downloads.php), then copy-paste them in ``src/C_SDK``. Similarly I won't risk including the built ``bindings.rs`` file itself, so you'll have to build it.
+I don't think I'd be legally allowed to redistribute the actual SDK in this repo and I don't want Spectrum's legal dept to send a hit squad on me, so the files required to build the bindings aren't included. Similarly I won't risk including the built ``bindings.rs`` file itself, so you'll have to build it. You'll need :
+
+- Rust toolchain
+- bindgen
+- clang/libclang
+- Spectrum's C SDK (grab it from [Spectrum's website](https://spectrum-instrumentation.com/support/downloads.php), then copy-paste the files in ``src/C_SDK``)
+
+### Installation
 
 ```bash
 cargo build --release
@@ -52,8 +59,7 @@ Use like any other local Rust crate :
    use spcm_rs as spcm;
 
    fn main() {
-	let card_handle: spcm::drv_handle;
-	card_handle = unsafe{spcm::spcm_hOpen(c"/dev/spcm0".as_ptr())}
+	let card_handle: spcm::drv_handle = unsafe{spcm::spcm_hOpen(c"/dev/spcm0".as_ptr());}
 
 	// set up card...
 
