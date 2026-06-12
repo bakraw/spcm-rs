@@ -4,7 +4,7 @@
 
 Bindgen'd Rust bindings for the Spectrum M5i digitizer cards' C SDK (haven't tested but probably also older models I guess).
 
-Also includes (in ``lib.rs``) a few util functions that were useful to me when programming the cards (page aligned alloc, converting that buffer to a ``void*``, reading ``char*`` errors to a ``Option<String>``, etc.). Tried to keep them as idiomatic / clean / simple as possible.
+Also includes (in ``utils.rs``) a few low-abstraction util functions that were useful to me when programming the cards (page aligned alloc, getting a ``void*`` to that buffer, reading it as a samples rather than individual bytes, reading ``char*`` errors to a ``Option<String>``, etc.). Tried to keep them as idiomatic / clean / simple as possible. Access them from the ``utils`` module.
 
 Those utils try to limit ``unsafe`` blocks to individual calls to the SDK's functions and strictly necessary pointer manipulation. Also they use standard Rust naming convention, and not the SDK's (no shot you'll ever catch me using systems hungarian notation).
 
@@ -58,20 +58,25 @@ Use like any other local Rust crate :
 	spcm-rs = {path="../spcm-rs"}
 	```
 
-2. Call from your Rust code:
+2. Call from your Rust code, e.g.:
    ```rust
    use spcm_rs as spcm;
 
    fn main() {
 	let card_handle: spcm::drv_handle = unsafe{spcm::spcm_hOpen(c"/dev/spcm0".as_ptr())};
+	let mut	buffer = Box::new(spcm::utils::PageAlignedBuffer([0; /*size*/ * 2]));
+	let	buffer_ptr: *mut raw::c_void = spcm::utils::get_buf_raw_ptr(&mut *buffer);
 
 	// set up card...
 
 	unsafe{spcm::spcm_dwSetParam_i32(card_handle, spcm::SPC_M2CMD, spcm::M2CMD_CARD_START | spcm::M2CMD_CARD_ENABLETRIGGER | spcm::M2CMD_CARD_WAITREADY);}
 
-	// do something...
+	// acquire data...
 
 	unsafe{spcm::spcm_vClose(card_handle);}
+
+	let samples: &[i16] = buffer.as_i16_samples();
+	// read samples...
    }
    ```
-   > I set up bindgen to use i32 as the default type for converted macros, as that's the type most frequently expected by SPCM's functions. Casting is still needed occasionally.
+   > I set up bindgen to use i32 as the default type for converted macros, as that's the type most frequently expected by SPCM's functions. Casting can still be needed occasionally.
