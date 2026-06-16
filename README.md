@@ -65,7 +65,7 @@ Use like any other local Rust crate :
    fn main() {
 	let card_handle: spcm::drv_handle = unsafe{spcm::spcm_hOpen(c"/dev/spcm0".as_ptr())};
 	let mut buffer = Box::new(spcm::utils::PageAlignedBuffer([0; /*size*/ * 2]));
-	let buffer_ptr: *mut raw::c_void = spcm::utils::get_buf_raw_ptr(&mut *buffer);
+	let buffer_ptr: *mut raw::c_void = buffer.as_mut_void_ptr();
 
 	// set up card...
 
