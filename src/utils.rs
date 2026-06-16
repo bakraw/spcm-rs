@@ -1,4 +1,3 @@
-
 use {crate::core,
 	 std::{ffi, os::raw, ptr, slice}};
 
@@ -16,12 +15,13 @@ pub struct PageAlignedBuffer<const N: usize>(pub [u8;N]);
 impl<const N: usize> PageAlignedBuffer<N> {
 	/// * Use to read the buffer if the card is in 16-bits unpacked samples mode.
 	/// * Negligible performance overhead (effectively just constructs a fat pointer).
-	/// * _**If N is uneven, the last byte will be ignored**_ (which is most likely
+	///	* O(1).
+	/// * **If N is odd, the last byte will be ignored** (which is most likely
 	/// 	not what you want).
 	pub fn as_i16_samples(&self) -> &[i16] {
 		// Unsafe block, but casting a pair of u8 to a i16 is memory-safe if the buffer
 		// has proper 2-bytes alignment (which it has in our case, as it's page-aligned).
-		// Even if N % 2 != 0, N / 2 will round down, such that the last u8 get ignored.
+		// Even if N % 2 != 0, N / 2 will round down, such that the last u8 will get ignored.
 		unsafe {
 			slice::from_raw_parts(self.0.as_ptr() as *const i16, N/2)
 		}
@@ -29,6 +29,7 @@ impl<const N: usize> PageAlignedBuffer<N> {
 
 	/// * Use to read the buffer if the card is in 8-bits packed samples mode.
 	/// * Negligible performance overhead (effectively just constructs a fat pointer).
+	/// * O(1).
 	pub fn as_i8_samples(&self) -> &[i8] {
 		// Unsafe block, but casting a u8 to a i8 is memory-safe.
 		unsafe {
@@ -37,18 +38,13 @@ impl<const N: usize> PageAlignedBuffer<N> {
 	}
 
 	// TODO: as_i12_samples()
+
+	/// * Returns a C-like ``void*`` to the given ``PageAlignedBuffer``.
+	pub fn as_mut_void_ptr(&self) -> *mut raw::c_void {
+		self as *const PageAlignedBuffer<N> as *mut raw::c_void
+	}
 }
 
-
-/// * Returns a void* to a given ``PageAlignedBuffer``.
-/// * If the buffer is in a box (heap allocated, which it usually is), you need to dereference it
-/// 	when passing it to the function.
-/// 	```rust
-/// 		let	buffer_ptr: *mut raw::c_void = spcm::get_buf_raw_ptr(&mut *buffer);
-/// 	```
-pub fn get_buf_raw_ptr<const N: usize>(buf: &mut PageAlignedBuffer<N>) -> *mut raw::c_void {
-	buf as *const PageAlignedBuffer<N> as *mut raw::c_void
-}
 
 /// * Reads the specified card's error string, and returns it as ``Some(String)`` if
 ///		it's not null (else ``None``).
