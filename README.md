@@ -14,20 +14,30 @@ Still in use, will change without notice as I find the need to add new features.
 
 ## Requirements
 
-I don't think I'd be legally allowed to redistribute the actual SDK in this repo and I don't want Spectrum's legal dept to send a hit squad on me, so the files required to build the bindings aren't included. Similarly I won't risk including the built ``bindings.rs`` file itself, so you'll have to build it. You'll need :
+I don't think I'd be legally allowed to redistribute the actual SDK in this repo and I don't want Spectrum's legal dept to send a drone strike on me, so the files required to build the bindings aren't included. Similarly I won't risk including the built ``bindings.rs`` file itself, so you'll have to build it. You'll need :
 
-- Rust toolchain
-- bindgen
-- clang/libclang
-- Spectrum's C SDK (grab it from [Spectrum's website](https://spectrum-instrumentation.com/support/downloads.php), then copy-paste the files in ``src/C_SDK``)
+- [Rust toolchain](https://rust-lang.org/tools/install/)
+- [clang/libclang](https://github.com/llvm/llvm-project/releases/)
+- [Spectrum's C SDK](https://spectrum-instrumentation.com/support/downloads.php) (download ``c_header`` then copy-paste all the files in ``src/C_SDK``)
 
 ## Installation
 
-```bash
-cargo build --release
-```
-The generated ``bindings.rs`` will be somewhere in ``target/release/build/``.
+I've only ever targeted Windows for this project so I can only give info on that. Look at ``dlltyp.h`` in the SDK to see the ``#ifdef`` differences if targeting another OS.
 
+### Windows -> Windows
+
+Because of macro / typedef shenanigans in the SDK, you have to build using the GCC toolchain rather than MSVC, even if building from Windows.
+Add the build target :
+```bash
+rustup target add x86_64-pc-windows-gnu
+```
+Then build with :
+```bash
+cargo build --target=x86_64-pc-windows-gnu --release
+```
+Bindings are generated during the build process and written to Cargo's build output directory.
+
+### Linux -> Windows
 
 **The building process might be more complex**, depending on your source and target. In my case, I was
 cross-compiling from Linux to Windows, so I needed to do a few things :
