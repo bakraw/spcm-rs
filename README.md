@@ -8,6 +8,8 @@ Also includes (in ``utils.rs``) a few low-abstraction util functions that were u
 
 Those utils try to limit ``unsafe`` blocks to individual calls to the SDK's functions and strictly necessary pointer manipulation. Also they use standard Rust naming convention, and not the SDK's (no shot you'll ever catch me using systems hungarian notation).
 
+![](https://github.com/user-attachments/assets/e2d2a27f-d049-4b75-8a94-b436cd00db76)
+
 ## Status
 
 Still in use, will change without notice as I find the need to add new features.
