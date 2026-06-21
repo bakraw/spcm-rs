@@ -4,7 +4,7 @@
 
 Bindgen'd Rust bindings for the Spectrum M5i digitizer cards' C SDK (haven't tested but probably also older models I guess).
 
-Also includes (in ``utils.rs``) a few low-abstraction util functions that were useful to me when programming the cards :
+Also includes (in ``utils.rs``) a few low-abstraction util functions that were useful to me when programming the cards, accessible from the ``utils`` module :
 - 4096-aligned ``PageAlignedBuffer<N>([u8;N])`` struct for easy page aligned byte buffer allocation ;
 - ``.as_mut_void_ptr()`` method to get a ``void*`` to that buffer ;
 - ``.as_i16_samples()`` and ``.as_i8_samples()`` methods to get a slice of 2-bytes unpacked or 1-byte packed samples from that buffer ;
