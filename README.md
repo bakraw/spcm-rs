@@ -86,6 +86,14 @@ Use like any other local Rust crate :
 	// set up card...
 
 	unsafe{spcm::spcm_dwSetParam_i32(card_handle, spcm::SPC_M2CMD, spcm::M2CMD_CARD_START | spcm::M2CMD_CARD_ENABLETRIGGER | spcm::M2CMD_CARD_WAITREADY);}
+	
+	match spcm::utils::get_error(card_handle) {
+		Some(err) => {
+			println!("{}\n", err);
+			process::exit(1);
+		}
+		None => print!("No error.\n")
+	};
 
 	// acquire data...
 
