@@ -8,6 +8,7 @@ Also includes (in ``utils.rs``) a few low-abstraction util functions that were u
 - 4096-aligned ``PageAlignedBuffer<N>([u8;N])`` struct for easy page aligned byte buffer allocation ;
 - ``.as_mut_void_ptr()`` method to get a ``void*`` to that buffer ;
 - ``.as_i16_samples()`` and ``.as_i8_samples()`` methods to get a slice of 2-bytes unpacked or 1-byte packed samples from that buffer ;
+- ``.as_u64_timestamps()`` method to get a slice of 8-bytes timsestamps from that buffer ;
 - ``get_error(drv_handle) -> Option<String>`` function that reads and returns the error string of a card if there is one.
   
 Those utils try to limit ``unsafe`` blocks to individual calls to the SDK's functions and strictly necessary pointer manipulation. Also they use standard Rust naming convention, and not the SDK's (no shot you'll ever catch me using systems hungarian notation).
