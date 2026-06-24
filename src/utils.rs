@@ -39,6 +39,20 @@ impl<const N: usize> PageAlignedBuffer<N> {
 
 	// TODO: as_i12_samples()
 
+	/// * Use to read the buffer if it contains timestamps.
+	/// * Negligible performance overhead (effectively just constructs a fat pointer).
+	///	* O(1).
+	/// * **If N % 8 != 0, the last few bytes will be ignored** (which is most likely
+	/// 	not what you want).
+	pub fn as_u64_timestamps(&self) -> &[u64] {
+		// Unsafe block, but casting eight u8 to a u64 is memory-safe if the buffer
+		// has proper 8-bytes alignment (which it has in our case, as it's page-aligned).
+		// Even if N % 8 != 0, N / 8 will round down, such that the last few u8 will get ignored.
+		unsafe {
+			slice::from_raw_parts(self.0.as_ptr() as *const u64, N/8)
+		}
+	}
+
 	/// * Returns a C-like ``void*`` to the given ``PageAlignedBuffer``.
 	pub fn as_mut_void_ptr(&self) -> *mut raw::c_void {
 		self as *const PageAlignedBuffer<N> as *mut raw::c_void
